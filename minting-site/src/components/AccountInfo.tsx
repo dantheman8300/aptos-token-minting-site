@@ -9,10 +9,10 @@ export default function AccountInfo (
     <div className="dropdown dropdown-bottom dropdown-end">
       <label tabIndex={0} className="btn btn-outline btn-secondary m-1">
         <span>
-          {/* <span className="">
-            {props.balance} APT 
-          </span> */}
-          <span className="ml-1 font-mono font-normal">
+          <span className="">
+            {props.balance} TOKENS 
+          </span>
+          <span className="ml-4 font-mono font-normal">
             {shortenAddress(props.address)}
           </span>
           </span>
