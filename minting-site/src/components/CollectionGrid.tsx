@@ -46,7 +46,7 @@ export default function CollectionGrid(
     })
 
     return (
-        <div className="flex flex-wrap gap-6 justify-center ">
+        <div className="flex flex-wrap gap-6 justify-center p-4">
             {nftCards}
         </div>
     )

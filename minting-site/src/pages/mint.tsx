@@ -367,7 +367,7 @@ export default function Mint() {
     }
     
     return (
-        <div className="bg-base-100 items-center">
+        <div className="bg-base-100 items-center h-screen">
             <Header
                 title="Collection name"
                 useWallet={true}

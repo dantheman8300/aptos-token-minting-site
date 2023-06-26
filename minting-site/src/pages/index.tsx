@@ -5,12 +5,12 @@ import Image from "next/image"
 export default function Home() {
 
 return (
-    <div className="bg-base-100">
+    <div className="bg-base-100 h-screen overflow-hidden">
         <Header 
             title="Collection name"
             showSocials={true}
         />
-        <div className="hero h-screen">
+        <div className="hero h-full">
             <div className="hero-content flex-col lg:flex-row">
                 <Image src={landingPageHeroPic} alt="landing page hero banner" className="max-w-sm rounded-lg shadow-2xl" />
                 <div>
