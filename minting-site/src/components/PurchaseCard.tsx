@@ -20,8 +20,8 @@ function PurchaseCard (
         
         {/* <div className="flex flex-col md:flex-row gap-x-10 items-center"> */}
           <div>
-            <Image src={tempPic} alt="Purchase Tickets" className="rounded-xl mb-2"/>
-            <h2 className="card-title">Mint token</h2>
+            <Image src={`https://ipfs.io/ipfs/QmSHQq3o6AvBBkw89fy8nU9W7uRcSRWF8HTMUFbnJoaBTM/img_${props.currentPictureId}.png`} alt="Purchase Tickets" width={500} height={500} className="rounded-xl mb-2"/>
+            <h2 className="card-title">DanCoin #{props.currentPictureId}</h2>
             {/* <div className="form-control">
               <label className="label">
                 <span className="label-text">Enter ticket amount</span>
@@ -48,7 +48,7 @@ function PurchaseCard (
                 <span  className="font-mono bg-warning text-warning-content">SUI</span>
               </label>
             </div> */}
-            <button className="btn btn-success w-full mt-4 mb-4" onClick={props.mintToken}>Mint</button>
+            <button className="btn btn-success w-full mt-4 mb-4" onClick={props.mintToken}>Mint NFT</button>
             
           </div>
           {/* <PurchaseStats 

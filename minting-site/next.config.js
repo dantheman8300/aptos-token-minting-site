@@ -7,6 +7,10 @@ const nextConfig = {
     COLLECTION_ADDRESS: process.env.COLLECTION_ADDRESS,
     COLLECTION_NAME: process.env.COLLECTION_NAME,
     COLLECTION_DESCRIPTION: process.env.COLLECTION_DESCRIPTION,
+    ARWEAVE_KEY: process.env.ARWEAVE_KEY,
+  },
+  images: {
+    domains: ['gateway.pinata.cloud', 'ipfs.io'],
   },
 }
 

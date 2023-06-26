@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import PurchaseCard from "@/components/PurchaseCard";
 import { useWallet, WalletReadyState } from "@aptos-labs/wallet-adapter-react";
 import { Provider, Network, AptosAccount, TxnBuilderTypes, BCS, AptosClient, FaucetClient } from "aptos";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 
 const {
     AccountAddress,
@@ -32,6 +32,9 @@ export default function Mint() {
 
     const [toast, setToast] = useState(<></>);
 
+    const [currentPictureId, setCurrentPictureId] = useState(-1);
+    const [tokenBalance, setTokenBalance] = useState(0);
+
     const {
     connect,
     connected,
@@ -40,6 +43,96 @@ export default function Mint() {
     wallets,
     signAndSubmitTransaction,
     } = useWallet();
+
+    const supply = async () => {
+        if (!account) return [];
+
+        const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
+        const faucetClient = new FaucetClient("https://fullnode.devnet.aptoslabs.com", "https://faucet.devnet.aptoslabs.com");
+
+        if (process.env.COLLECTION_ADDRESS === undefined) {
+            console.log("missing collection address")
+            return;
+        }
+
+        let resources = await client.getAccountResources(process.env.COLLECTION_ADDRESS);
+        console.log("collection", resources);
+
+        // resources = await client.getAccountResources(account.address);
+        // console.log("account", resources);
+
+        for (const resource of resources) {
+            console.log("resource", resource)
+            if (resource.type === "0x4::collection::FixedSupply") {
+                console.log("found supply", resource.data)
+                return (resource.data as any).mint_events.counter
+            }
+        }
+    }
+
+    const getTokenBalance = async () => {
+        if (process.env.COLLECTION_OWNER_ACCOUNT === undefined || process.env.COLLECTION_NAME === undefined || process.env.COLLECTION_ADDRESS === undefined) {
+            return
+        }
+
+        if (account === null) {
+            return
+        }
+
+        console.log("account", account)
+
+        console.log("creating indexer client")
+        // const indexerClient = new IndexerClient("https://fullnode.devnet.aptoslabs.com")
+        // const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
+        const provider = new Provider(Network.DEVNET);
+
+        console.log("getting tokens")
+        // const tokens = await provider.getTokenOwnedFromCollectionNameAndCreatorAddress(
+        //     account.address,
+        //     process.env.COLLECTION_NAME,
+        //     process.env.COLLECTION_OWNER_ACCOUNT,
+        // )
+
+        // const collectionRes = await provider.getAccountResources(process.env.COLLECTION_ADDRESS);
+        // console.log("collection", collectionRes);
+
+        const tokenCount = await provider.getAccountTokensCount(account.address)
+
+        console.log("tokenCount", tokenCount)
+
+        const collectionData = await provider.getCollectionData(
+            process.env.COLLECTION_OWNER_ACCOUNT, 
+            process.env.COLLECTION_NAME
+        )
+
+        console.log("collectionData", collectionData)
+
+        const tokens = await provider.getTokenOwnedFromCollectionAddress(
+            account.address,
+            process.env.COLLECTION_ADDRESS,
+            
+        )
+
+        console.log("tokens", tokens)
+
+        return tokens.current_token_ownerships_v2.length
+    }
+
+    // Fetch collection info and get current picture id from supply
+    useEffect(() => {
+        
+
+        supply().then((supply) => {
+            console.log("supply", supply);
+            setCurrentPictureId(supply);
+        })
+
+        getTokenBalance().then((balance) => {
+            console.log("balance", balance);
+            setTokenBalance(balance || 0);
+        })
+        
+    });
 
     // const mintCoin = async () => {
     //     if (!account) return [];
@@ -95,13 +188,11 @@ export default function Mint() {
 
         setToast(
             <div className="alert alert-info">
-                <div>
-                    <span>Minting NFT...</span>
-                    {/* <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20v-6M6 20V10M18 20V4"/></svg> */}
-                    <button onClick={() => setToast(<></>)}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="butt" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </button>
-                </div>
+                <span className="loading loading-spinner loading-sm"/>
+                <span>Minting NFT...</span>
+                <button onClick={() => setToast(<></>)}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="butt" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
         )
 
@@ -121,8 +212,8 @@ export default function Mint() {
                 [
                     BCS.bcsSerializeStr("DanCoin"),
                     BCS.bcsSerializeStr("my collection"),
-                    BCS.bcsSerializeStr("DanCoin"),
-                    BCS.bcsSerializeStr("uri"),
+                    BCS.bcsSerializeStr(`DanCoin #${currentPictureId}`),
+                    BCS.bcsSerializeStr(`https://ipfs.io/ipfs/QmSHQq3o6AvBBkw89fy8nU9W7uRcSRWF8HTMUFbnJoaBTM/img_${currentPictureId}.png`),
                     BCS.bcsSerializeStr(""), 
                     BCS.bcsSerializeStr(""),
                     BCS.bcsSerializeStr("")
@@ -165,13 +256,11 @@ export default function Mint() {
         if (transactionRes.success === false) {
             setToast(
                 <div className="alert alert-error">
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                        <span>Failed to mint NFT</span>
-                        <button onClick={() => setToast(<></>)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="butt" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        </button>
-                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    <span>Failed to mint NFT</span>
+                    <button onClick={() => setToast(<></>)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="butt" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
                 </div>
             )
             return;
@@ -247,13 +336,11 @@ export default function Mint() {
         if (transactionRes2.success === false) {
             setToast(
                 <div className="alert alert-error">
-                    <div>
                         <span>Failed to mint NFT</span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                         <button onClick={() => setToast(<></>)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="butt" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </button>
-                    </div>
                 </div>
             )
             // TODO burn the token
@@ -270,13 +357,11 @@ export default function Mint() {
 
         setToast(
             <div className="alert alert-success">
-                <div>
-                    <span>NFT minted!</span>
-                    <a href="collection"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><g fill="none" fill-rule="evenodd"><path d="M18 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8c0-1.1.9-2 2-2h5M15 3h6v6M10 14L20.2 3.8"/></g></svg></a>
-                    <button onClick={() => setToast(<></>)}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="butt" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </button>
-                </div>
+                <span>NFT minted!</span>
+                <a href="collection"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><g fill="none" fill-rule="evenodd"><path d="M18 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8c0-1.1.9-2 2-2h5M15 3h6v6M10 14L20.2 3.8"/></g></svg></a>
+                <button onClick={() => setToast(<></>)}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="butt" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
         )
     }
@@ -291,14 +376,16 @@ export default function Mint() {
                 connect={connect}
                 disconnect={disconnect}
                 connected={connected}
-                balance={"0"}
+                balance={tokenBalance.toLocaleString()}
             />
             {/* <button onClick={mintCoin}>Mint</button> */}
-            <PurchaseCard 
-                mintToken={mintCoin}
-                currentPictureId={1}
-            />
-            <button onClick={getResources}>Get Resources</button>
+            <div className="flex justify-center">
+                <PurchaseCard 
+                    mintToken={mintCoin}
+                    currentPictureId={currentPictureId}
+                />
+            </div>
+            {/* <button onClick={getResources}>Get Resources</button> */}
             <div className="toast toast-end toast-bottom">
                 {toast}
             </div>

@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import landingPageHeroPic from "../../public/landing-page.webp"
+import landingPageHeroPic from "../../public/landing-page.png"
 import Image from "next/image"
 
 export default function Home() {

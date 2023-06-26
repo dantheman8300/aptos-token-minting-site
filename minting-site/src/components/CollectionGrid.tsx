@@ -1,22 +1,23 @@
+import { NFT } from '@/pages/collection'
 import Image, { StaticImageData } from 'next/image'
+
+
 
 export default function CollectionGrid(
     props: {
-        nfts: {
-            name: string, 
-            address: string, 
-            image: StaticImageData
-        }[]
+        nfts: NFT[]
     }
 ) {
     const nftCards = props.nfts.map((nft, index) => {
         const truncatedAddress = nft.address.slice(0, 5) + "..." + nft.address.slice(-3)
 
+        console.log("nft", nft)
+
         return (
             <div className="card shadow-xl rounded-box w-64 h-64">
                 <div className="card-body">
                     <figure>
-                        <Image src={nft.image} alt="" className="rounded-box" />
+                        { nft.image != 'uri' && <Image src={nft.image } width={150} height={150} alt="" className="rounded-box" />}
                     </figure>
                     <div className="justify-center card-actions">
                         <label htmlFor={`my-modal-${index}`} className="btn btn-primary">Details</label>
@@ -26,7 +27,7 @@ export default function CollectionGrid(
                 <label className="modal" htmlFor={`my-modal-${index}`}>
                     <div className="modal-box modal-bottom sm:modal-middle relative flex flex-col">
                         {/* <label htmlFor={`my-modal-${index}`} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label> */}
-                        <Image src={nft.image} alt="" className="rounded-box " />
+                        { nft.image != 'uri' && <Image src={nft.image} width={350} height={350} alt="" className="rounded-box " />}
                         <div className="stats stats-vertical lg:stats-horizontal mt-2">
                             <div className="stat">
                                 <div className="stat-title">Name:</div>
@@ -45,7 +46,7 @@ export default function CollectionGrid(
     })
 
     return (
-        <div className="flex flex-wrap gap-6">
+        <div className="flex flex-wrap gap-6 justify-center ">
             {nftCards}
         </div>
     )
