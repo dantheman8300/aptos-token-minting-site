@@ -366,7 +366,14 @@ export default function Mint() {
 
         console.log("token resources", tokenResources);
 
-        let accountResources = await client.getAccountResources(account.address);
+        let accountResources
+
+        try {
+            accountResources = await client.getAccountResources(account.address);
+        } catch (e) {
+            console.log(e);
+            // return
+        }
 
         console.log("account resources", accountResources);
 
