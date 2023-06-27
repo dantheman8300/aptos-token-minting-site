@@ -10,7 +10,7 @@ export default function AccountInfo (
       <label tabIndex={0} className="btn btn-outline btn-secondary m-1">
         <span>
           <span className="">
-            {props.balance} {process.env.COLLECTION_TOKEN_NAME || "tokens"}
+            {props.balance} {process.env.COLLECTION_NAME || "tokens"}
           </span>
           <span className="ml-4 font-mono font-normal">
             {shortenAddress(props.address)}

@@ -191,7 +191,7 @@ export default function Mint() {
         if (!account) return [];
 
         // Verify that the env file has been set up
-        if (process.env.COLLECTION_OWNER_ACCOUNT === undefined || process.env.COLLECTION_NAME === undefined || process.env.COLLECTION_ADDRESS === undefined || process.env.COLLECTION_DESCRIPTION === undefined || process.env.COLLECTION_TOKEN_NAME === undefined) {
+        if (process.env.COLLECTION_OWNER_ACCOUNT === undefined || process.env.COLLECTION_NAME === undefined || process.env.COLLECTION_ADDRESS === undefined || process.env.COLLECTION_DESCRIPTION === undefined || process.env.COLLECTION_NAME === undefined) {
             console.log("missing collection info")
             return;
         }
@@ -224,7 +224,7 @@ export default function Mint() {
                 [
                     BCS.bcsSerializeStr(process.env.COLLECTION_NAME),
                     BCS.bcsSerializeStr(process.env.COLLECTION_DESCRIPTION),
-                    BCS.bcsSerializeStr(`${process.env.COLLECTION_TOKEN_NAME} #${currentPictureId}`),
+                    BCS.bcsSerializeStr(`${process.env.COLLECTION_NAME} #${currentPictureId}`),
                     BCS.bcsSerializeStr(`https://ipfs.io/ipfs/${process.env.COLLECTION_IMAGES_HASH}/img_${currentPictureId}.png`),
                     BCS.bcsSerializeStr(""), 
                     BCS.bcsSerializeStr(""),

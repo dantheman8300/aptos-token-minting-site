@@ -50,18 +50,21 @@ export default function CollectionGrid(
                             <div className="stat">
                                 <div className="stat-title">Name:</div>
                                 <div className="stat-value">{nft.name}</div>
-                                {/* <div className="stat-desc">Jan 1st - Feb 1st</div> */}
+                                    {/* <div className="stat-desc">Jan 1st - Feb 1st</div> */}
                             </div>
                             <div className="stat">
-                                <div className="stat-title">Token address:</div>
-                                {
-                                    props.network ? 
-                                    <a href={`https://explorer.aptoslabs.com/?network=${props.network}`} target="_blank" rel="noopener noreferrer">
-                                        <div className="stat-value link">{truncatedAddress}</div>
-                                    </a>
-                                    :
-                                    <div className="stat-value">{truncatedAddress}</div>
-                                }
+                            <div className="stat-title">
+                                Token address:
+                            </div>
+                                <div 
+                                    className="stat-value  flex items-center gap-1" 
+                                >
+                                    {truncatedAddress}
+                                    <button className="btn btn-ghost btn-xs btn-square" onClick={() => navigator.clipboard.writeText(nft.address)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                                    </button>
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
