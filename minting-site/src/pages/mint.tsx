@@ -45,7 +45,6 @@ export default function Mint() {
     } = useWallet();
 
     const supply = async () => {
-        if (!account) return [];
 
         const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
         const faucetClient = new FaucetClient("https://fullnode.devnet.aptoslabs.com", "https://faucet.devnet.aptoslabs.com");
@@ -65,7 +64,7 @@ export default function Mint() {
             console.log("resource", resource)
             if (resource.type === "0x4::collection::FixedSupply") {
                 console.log("found supply", resource.data)
-                return (resource.data as any).mint_events.counter
+                return ((resource.data as any).mint_events.counter)
             }
         }
     }
@@ -367,9 +366,9 @@ export default function Mint() {
     }
     
     return (
-        <div className="bg-base-100 items-center h-screen">
+        <div className="flex flex-col bg-base-100 h-screen">
             <Header
-                title="Collection name"
+                title={process.env.COLLECTION_NAME || "Collection Name"}
                 useWallet={true}
                 wallet={account}
                 wallets={wallets}
@@ -378,14 +377,16 @@ export default function Mint() {
                 connected={connected}
                 balance={tokenBalance.toLocaleString()}
             />
-            {/* <button onClick={mintCoin}>Mint</button> */}
-            <div className="flex justify-center">
-                <PurchaseCard 
-                    mintToken={mintCoin}
-                    currentPictureId={currentPictureId}
-                />
-            </div>
-            {/* <button onClick={getResources}>Get Resources</button> */}
+            { 
+                true &&
+                <div className="flex justify-center ">
+                    <PurchaseCard 
+                        mintToken={mintCoin}
+                        currentPictureId={currentPictureId}
+                        disable={connected === false}
+                    />
+                </div>
+            }
             <div className="toast toast-end toast-bottom">
                 {toast}
             </div>

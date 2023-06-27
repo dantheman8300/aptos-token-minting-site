@@ -10,7 +10,7 @@ export default function AccountInfo (
       <label tabIndex={0} className="btn btn-outline btn-secondary m-1">
         <span>
           <span className="">
-            {props.balance} TOKENS 
+            {props.balance} {process.env.COLLECTION_TOKEN_NAME || "tokens"}
           </span>
           <span className="ml-4 font-mono font-normal">
             {shortenAddress(props.address)}
@@ -18,8 +18,8 @@ export default function AccountInfo (
           </span>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </label>
-      <ul tabIndex={0} className="dropdown-content btn btn-error p-2 shadow bg-base-100 rounded-box w-52" onClick={props.disconnectWallet}>
-        <li><a>Disconnect</a></li>
+      <ul tabIndex={0} className="dropdown-content p-2" onClick={props.disconnectWallet}>
+        <li><a><button className="btn btn-error ">Disconnect</button></a></li>
       </ul>
     </div>
   )

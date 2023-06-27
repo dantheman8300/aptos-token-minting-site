@@ -10,7 +10,8 @@ const TICKET_PRICE = 20;
 function PurchaseCard (
   props: {
     mintToken: () => void,
-    currentPictureId: number
+    currentPictureId: number,
+    disable: boolean,
   }
 ) {
 
@@ -21,7 +22,7 @@ function PurchaseCard (
         {/* <div className="flex flex-col md:flex-row gap-x-10 items-center"> */}
           <div>
             <Image src={`https://ipfs.io/ipfs/QmSHQq3o6AvBBkw89fy8nU9W7uRcSRWF8HTMUFbnJoaBTM/img_${props.currentPictureId}.png`} alt="Purchase Tickets" width={500} height={500} className="rounded-xl mb-2"/>
-            <h2 className="card-title">DanCoin #{props.currentPictureId}</h2>
+            <h2 className="card-title">{process.env.COLLECTION_TOKEN_NAME || "token"} #{props.currentPictureId}</h2>
             {/* <div className="form-control">
               <label className="label">
                 <span className="label-text">Enter ticket amount</span>
@@ -48,7 +49,13 @@ function PurchaseCard (
                 <span  className="font-mono bg-warning text-warning-content">SUI</span>
               </label>
             </div> */}
-            <button className="btn btn-success w-full mt-4 mb-4" onClick={props.mintToken}>Mint NFT</button>
+            <button 
+              className="btn btn-success w-full mt-4 mb-4" 
+              onClick={props.mintToken}
+              disabled={props.disable}
+            >
+             {props.disable ? "Connect wallet to mint" : "Mint"}
+            </button>
             
           </div>
           {/* <PurchaseStats 
