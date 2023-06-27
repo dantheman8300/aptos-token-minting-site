@@ -66,7 +66,7 @@ export default function Mint() {
             console.log("resource", resource)
             if (resource.type === "0x4::collection::FixedSupply") {
                 console.log("found supply", resource.data)
-                return ((resource.data as any).mint_events.counter)
+                return parseInt((resource.data as any).mint_events.counter) + 1
             }
         }
     }
