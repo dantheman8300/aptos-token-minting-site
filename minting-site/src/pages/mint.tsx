@@ -66,7 +66,7 @@ export default function Mint() {
             console.log("resource", resource)
             if (resource.type === "0x4::collection::FixedSupply") {
                 console.log("found supply", resource.data)
-                return (parseInt((resource.data as any).mint_events.counter) + 1).toLocaleString();
+                return ((resource.data as any).mint_events.counter)
             }
         }
     }
@@ -125,8 +125,8 @@ export default function Mint() {
         setIsLoading(true);
 
         supply().then((supply) => {
-            console.log("supply", supply);
-            setCurrentPictureId(supply);
+            console.log("supply", supply)
+            setCurrentPictureId(parseInt(supply) + 1);
         })
 
         getTokenBalance().then((balance) => {
