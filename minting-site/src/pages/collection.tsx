@@ -5,8 +5,7 @@ import tempPic from '../../public/landing-page.webp';
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useEffect, useState } from "react";
 import { AptosClient, IndexerClient, Network, Provider } from "aptos"
-
-import { ArweaveSigner, createData } from "arbundles";
+import Image from "next/image"
 
 export interface NFT {
     name: string,
@@ -18,6 +17,7 @@ export default function Collection() {
 
     const [nfts, setNfts] = useState<NFT[]>([])
     const [tokenBalance, setTokenBalance] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     const {
         connect,
@@ -41,6 +41,8 @@ export default function Collection() {
                 return
             }
 
+            
+
             getTokens().then((tokens) => {
                 console.log("tokens", tokens)
 
@@ -59,13 +61,22 @@ export default function Collection() {
                     })
                 })
 
+                if (nfts.length === 0) {
+                    nfts.push({
+                        name: "No NFTs",
+                        address: "0x0",
+                        image: `https://ipfs.io/ipfs/${process.env.COLLECTION_IMAGE_HASH}`,
+                    })
+                }
+
                 setNfts(nfts)
+                setIsLoading(false)
 
 
             })  
 
         }
-    }, [connected])
+    }, [connected, account])
 
     const getTokenBalance = async () => {
         if (process.env.COLLECTION_OWNER_ACCOUNT === undefined || process.env.COLLECTION_NAME === undefined || process.env.COLLECTION_ADDRESS === undefined) {
@@ -174,10 +185,10 @@ export default function Collection() {
     }
 
     return (
-        <div className="bg-base-100 ">
+        <div className="flex flex-col h-screen bg-base-100 items-center">
             {/* <Header title="Collection"/> */}
             <Header
-                title="Collection name"
+                title={process.env.COLLECTION_NAME || "FILL COLLECTION_NAME IN .ENV FILE"}
                 useWallet={true}
                 wallet={account}
                 wallets={wallets}
@@ -186,7 +197,35 @@ export default function Collection() {
                 connected={connected}
                 balance={tokenBalance.toLocaleString()}
             />
-            <CollectionGrid nfts={nfts} />
+            {
+                connected &&
+                isLoading &&
+                <div className="toast toast-center toast-middle">
+                    <div className="alert">
+                        <span className="loading loading-spinner loading-lg"></span>
+                        <span>Loading...</span>
+                    </div>
+                </div>
+            }
+            {
+                connected &&
+                !isLoading &&
+                <div className="flex-grow bg-base-100">
+                    <CollectionGrid nfts={nfts} network={network?.name}  />
+                </div>
+            }
+            {
+                !connected &&
+                <div className="flex flex-grow justify-content items-center">
+                    <div className="card card-compact w-fit h-fit bg-base-100 shadow-xl">
+                        <figure><Image src={`https://ipfs.io/ipfs/${process.env.COLLECTION_IMAGE_HASH}`} width={200} height={200} alt="landing page hero banner" className="max-w-sm rounded-lg shadow-2xl" /></figure>
+                        <div className="card-body items-center">
+                            <h2 className="card-title">Wallet not connected!</h2>
+                            <p>Connect wallet to view collection</p>
+                        </div>
+                    </div>
+                </div>
+            }
         </div> 
     )
 }

@@ -11,59 +11,23 @@ function PurchaseCard (
   props: {
     mintToken: () => void,
     currentPictureId: number,
-    disable: boolean,
+    connected: boolean,
+    minting: boolean,
   }
 ) {
 
   return (
     <div className="card card-compact shadow-2xl max-w-lg m-10 bg-secondary " >
-      <div className="card-body">
-        
-        {/* <div className="flex flex-col md:flex-row gap-x-10 items-center"> */}
-          <div>
-            <Image src={`https://ipfs.io/ipfs/QmSHQq3o6AvBBkw89fy8nU9W7uRcSRWF8HTMUFbnJoaBTM/img_${props.currentPictureId}.png`} alt="Purchase Tickets" width={500} height={500} className="rounded-xl mb-2"/>
-            <h2 className="card-title">{process.env.COLLECTION_TOKEN_NAME || "token"} #{props.currentPictureId}</h2>
-            {/* <div className="form-control">
-              <label className="label">
-                <span className="label-text">Enter ticket amount</span>
-              </label>
-              <label className="input-group w-full max-w-xs">
-                <input 
-                  type="text" 
-                  id="ticketAmount"
-                  placeholder={ticketAmount.toString()} 
-                  className={`input input-bordered w-full max-w-xs focus:outline-none`} 
-                  onChange={(e) => {
-                    updateTicketAmount(e.target.value)
-                  }}
-                />
-                <span className="bg-warning text-warning-content">Tickets</span>
-              </label>
-            </div> */}
-            {/* <div className="form-control">
-              <label className="label">
-                <span className="label-text">Price</span>
-              </label>
-              <label className="input-group w-full max-w-xs">
-                <input type="text" placeholder={ticketPrice(ticketAmount)} className="input input-bordered w-full max-w-xs" disabled />
-                <span  className="font-mono bg-warning text-warning-content">SUI</span>
-              </label>
-            </div> */}
-            <button 
-              className="btn btn-success w-full mt-4 mb-4" 
-              onClick={props.mintToken}
-              disabled={props.disable}
-            >
-             {props.disable ? "Connect wallet to mint" : "Mint"}
-            </button>
-            
-          </div>
-          {/* <PurchaseStats 
-            poolAmount={1000000}
-            endTimestamp={1685249942}
-            ticketPrice={TICKET_PRICE}
-          /> */}
-        {/* </div> */}
+      <div className="card-body items-center">
+        <Image src={`https://ipfs.io/ipfs/QmSHQq3o6AvBBkw89fy8nU9W7uRcSRWF8HTMUFbnJoaBTM/img_${props.currentPictureId}.png`} alt="Purchase Tickets" width={500} height={500} className="rounded-xl mb-2"/>
+        <h2 className="card-title">{process.env.COLLECTION_TOKEN_NAME || "token"} #{props.currentPictureId}</h2>
+        <button 
+          className="btn btn-success w-full" 
+          onClick={props.mintToken}
+          disabled={props.connected == false || props.minting == true}
+        >
+          {props.connected == false ? "Connect wallet to mint" : (props.minting ? "Minting..." : "Mint")}
+        </button>
       </div>
     </div>
   )

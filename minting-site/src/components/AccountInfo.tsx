@@ -18,8 +18,8 @@ export default function AccountInfo (
           </span>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </label>
-      <ul tabIndex={0} className="dropdown-content p-2" onClick={props.disconnectWallet}>
-        <li><a><button className="btn btn-error ">Disconnect</button></a></li>
+      <ul tabIndex={0} className="dropdown-content p-2 z-20" onClick={props.disconnectWallet}>
+        <li><a><button className="btn btn-error">Disconnect</button></a></li>
       </ul>
     </div>
   )

@@ -34,6 +34,8 @@ export default function Mint() {
 
     const [currentPictureId, setCurrentPictureId] = useState(-1);
     const [tokenBalance, setTokenBalance] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [minting, setMinting] = useState(false);
 
     const {
     connect,
@@ -119,7 +121,8 @@ export default function Mint() {
 
     // Fetch collection info and get current picture id from supply
     useEffect(() => {
-        
+
+        setIsLoading(true);
 
         supply().then((supply) => {
             console.log("supply", supply);
@@ -130,6 +133,8 @@ export default function Mint() {
             console.log("balance", balance);
             setTokenBalance(balance || 0);
         })
+
+        setIsLoading(false);
         
     });
 
@@ -185,6 +190,14 @@ export default function Mint() {
 
         if (!account) return [];
 
+        // Verify that the env file has been set up
+        if (process.env.COLLECTION_OWNER_ACCOUNT === undefined || process.env.COLLECTION_NAME === undefined || process.env.COLLECTION_ADDRESS === undefined || process.env.COLLECTION_DESCRIPTION === undefined || process.env.COLLECTION_TOKEN_NAME === undefined) {
+            console.log("missing collection info")
+            return;
+        }
+
+        setMinting(true);
+
         setToast(
             <div className="alert alert-info">
                 <span className="loading loading-spinner loading-sm"/>
@@ -209,9 +222,9 @@ export default function Mint() {
                 "mint", 
                 [],
                 [
-                    BCS.bcsSerializeStr("DanCoin"),
-                    BCS.bcsSerializeStr("my collection"),
-                    BCS.bcsSerializeStr(`DanCoin #${currentPictureId}`),
+                    BCS.bcsSerializeStr(process.env.COLLECTION_NAME),
+                    BCS.bcsSerializeStr(process.env.COLLECTION_DESCRIPTION),
+                    BCS.bcsSerializeStr(`${process.env.COLLECTION_TOKEN_NAME} #${currentPictureId}`),
                     BCS.bcsSerializeStr(`https://ipfs.io/ipfs/QmSHQq3o6AvBBkw89fy8nU9W7uRcSRWF8HTMUFbnJoaBTM/img_${currentPictureId}.png`),
                     BCS.bcsSerializeStr(""), 
                     BCS.bcsSerializeStr(""),
@@ -262,6 +275,9 @@ export default function Mint() {
                     </button>
                 </div>
             )
+
+            setMinting(false);
+
             return;
         }
 
@@ -363,12 +379,14 @@ export default function Mint() {
                 </button>
             </div>
         )
+
+        setMinting(false);
     }
     
     return (
         <div className="flex flex-col bg-base-100 h-screen">
             <Header
-                title={process.env.COLLECTION_NAME || "Collection Name"}
+                title={process.env.COLLECTION_NAME || "FILL COLLECTION_NAME IN .ENV FILE"}
                 useWallet={true}
                 wallet={account}
                 wallets={wallets}
@@ -378,13 +396,23 @@ export default function Mint() {
                 balance={tokenBalance.toLocaleString()}
             />
             { 
-                true &&
+                !isLoading &&
                 <div className="flex justify-center ">
                     <PurchaseCard 
                         mintToken={mintCoin}
                         currentPictureId={currentPictureId}
-                        disable={connected === false}
+                        connected={connected}
+                        minting={minting}
                     />
+                </div>
+            }
+            {
+                isLoading &&
+                <div className="toast toast-center toast-middle">
+                    <div className="alert">
+                        <span className="loading loading-spinner loading-lg"></span>
+                        <span>Loading...</span>
+                    </div>
                 </div>
             }
             <div className="toast toast-end toast-bottom">
