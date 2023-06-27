@@ -2,7 +2,7 @@
 Welcome to Overmind's NFT minting site quest! 
 
 # Instructions: 
-1. Fork/clone this repo
+1. Fork this repo
 2. [Set up your Aptos development environment within the app.](#setting-up-your-aptos-environment)
 3. [Set up your image hosting server.](#set-up-your-image-hosting-server)
 4. [Create your Aptos NFT collection. ](#create-your-nft-collection)
