@@ -225,7 +225,7 @@ export default function Mint() {
                     BCS.bcsSerializeStr(process.env.COLLECTION_NAME),
                     BCS.bcsSerializeStr(process.env.COLLECTION_DESCRIPTION),
                     BCS.bcsSerializeStr(`${process.env.COLLECTION_TOKEN_NAME} #${currentPictureId}`),
-                    BCS.bcsSerializeStr(`https://ipfs.io/ipfs/QmSHQq3o6AvBBkw89fy8nU9W7uRcSRWF8HTMUFbnJoaBTM/img_${currentPictureId}.png`),
+                    BCS.bcsSerializeStr(`https://ipfs.io/ipfs/${process.env.COLLECTION_IMAGES_HASH}/img_${currentPictureId}.png`),
                     BCS.bcsSerializeStr(""), 
                     BCS.bcsSerializeStr(""),
                     BCS.bcsSerializeStr("")

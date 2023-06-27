@@ -11,7 +11,8 @@ const nextConfig = {
     TWITTER_URL: process.env.TWITTER_URL,
     DISCORD_URL: process.env.DISCORD_URL,
     GITHUB_URL: process.env.GITHUB_URL,
-    COLLECTION_IMAGE_HASH: process.env.COLLECTION_IMAGE_HASH,
+    COLLECTION_GENERAL_IMAGE_HASH: process.env.COLLECTION_GENERAL_IMAGE_HASH,
+    COLLECTION_IMAGES_HASH: process.env.COLLECTION_IMAGES_HASH,
   },
   images: {
     domains: ['gateway.pinata.cloud', 'ipfs.io'],

@@ -12,7 +12,7 @@ return (
         />
         <div className="hero h-full">
             <div className="hero-content flex-col lg:flex-row">
-                <Image src={`https://ipfs.io/ipfs/${process.env.COLLECTION_IMAGE_HASH}`} width={500} height={500} alt="landing page hero banner" className="max-w-sm rounded-lg shadow-2xl" />
+                <Image src={`https://ipfs.io/ipfs/${process.env.COLLECTION_GENERAL_IMAGE_HASH}`} width={500} height={500} alt="landing page hero banner" className="max-w-sm rounded-lg shadow-2xl" />
                 <div>
                     <h1 className="text-5xl font-bold">{process.env.COLLECTION_NAME || "FILL COLLECTION_NAME IN .ENV FILE"} Website</h1>
                     <p className="py-6">{process.env.COLLECTION_DESCRIPTION || "FILL COLLECTION_DESCRIPTION IN .ENV FILE"}</p>

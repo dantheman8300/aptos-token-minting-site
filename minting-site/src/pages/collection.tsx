@@ -65,7 +65,7 @@ export default function Collection() {
                     nfts.push({
                         name: "No NFTs",
                         address: "0x0",
-                        image: `https://ipfs.io/ipfs/${process.env.COLLECTION_IMAGE_HASH}`,
+                        image: `https://ipfs.io/ipfs/${process.env.COLLECTION_GENERAL_IMAGE_HASH}`,
                     })
                 }
 
@@ -218,7 +218,7 @@ export default function Collection() {
                 !connected &&
                 <div className="flex flex-grow justify-content items-center">
                     <div className="card card-compact w-fit h-fit bg-base-100 shadow-xl">
-                        <figure><Image src={`https://ipfs.io/ipfs/${process.env.COLLECTION_IMAGE_HASH}`} width={200} height={200} alt="landing page hero banner" className="max-w-sm rounded-lg shadow-2xl" /></figure>
+                        <figure><Image src={`https://ipfs.io/ipfs/${process.env.COLLECTION_GENERAL_IMAGE_HASH}`} width={200} height={200} alt="landing page hero banner" className="max-w-sm rounded-lg shadow-2xl" /></figure>
                         <div className="card-body items-center">
                             <h2 className="card-title">Wallet not connected!</h2>
                             <p>Connect wallet to view collection</p>
