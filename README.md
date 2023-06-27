@@ -4,10 +4,9 @@ Welcome to Overmind's NFT minting site quest!
 # Instructions: 
 1. Fork/clone this repo
 2. [Set up your Aptos development environment within the app.](#setting-up-your-aptos-environment)
-3. [Create your Aptos NFT collection. ](#create-your-nft-collection)
-4. [Set up your image hosting server.](#set-up-your-image-hosting-server)
-5. Connect your collection to the frontend.
-6. Host your frontend on Vercel
+3. [Set up your image hosting server.](#set-up-your-image-hosting-server)
+4. [Create your Aptos NFT collection. ](#create-your-nft-collection)
+6. [Set up and host your frontend](#setting-up-your-frontend)
 
 # Setting up your Aptos environment
 1. Navigate to the minting-site directory 
@@ -60,7 +59,7 @@ Welcome to Overmind's NFT minting site quest!
 
     aptos move run --function-id 0x4::aptos_token::create_collection --args string:"This is your very own NFT minting website! Follow along with Overmind's guide on how to create your own collection and set up your minting site! Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi." u64:500 string:"developer token" string:"https://overmind.xyz/" bool:true bool:true bool:true bool:true bool:true bool:true bool:true bool:false bool:false u64:1 u64:100
 
-4. Enter collection name and description in the `.env` file.
+1. Enter collection name, description, max supply, and address in the `.env` file.
 
 # Set up your image hosting server
 1. Create your images and store them all in a folder named `images`
@@ -78,6 +77,18 @@ Welcome to Overmind's NFT minting site quest!
 9. Upload your collection's logo image and name it `collection_image.FILE` replacing FILE with the appropriate file extension.
 
     ex. `collection_image.png`
+
+10. Copy the `Content Identifier` for `collection_image.png` and paste it into the `.env` file under `COLLECTION_GENERAL_IMAGE_HASH`
+11. Copy the `Content Identifier` for `images` and paste it into the `.env` file under `COLLECTION_IMAGES_HASH`
+
+
+# Setting up your frontend
+1. Visit [vercel](https://vercel.com/) and sign up/in. 
+2. Navigate to the `Import Git Repository` and import this forked repo.
+3. In `Configure Project`, select `Next.js` for `Framework Preset` and select `minting-site` for `Root directory`.
+4. Fill out the desired social media URLs that you want to use for your collection. All social media links are optional. Leave any blank that are not desired.
+5. Copy the conents of the .env file and paste it into `Environment Variables: EXAMPLE_NAME`
+6. Click deploy
 
 
 aptos account fund-with-faucet --account 0xf5765b8561238764a44ebfea94abffd8c4f5f33a1f88d5888ee7e15a430b13a5
