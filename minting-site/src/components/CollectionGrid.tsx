@@ -43,7 +43,7 @@ export default function CollectionGrid(
                 </div>
                 <input type="checkbox" id={`my-modal-${index}`} className="modal-toggle" />
                 <label className="modal" htmlFor={`my-modal-${index}`}>
-                    <div className="modal-box modal-bottom sm:modal-middle relative flex flex-col overflow-x-hidden">
+                    <div className="modal-box modal-bottom sm:modal-middle relative flex flex-col overflow-x-hidden max-w-fit">
                         {/* <label htmlFor={`my-modal-${index}`} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label> */}
                         { nft.image != 'uri' && <Image src={nft.image} width={450} height={450} alt="" className="rounded-box " />}
                         <div className="stats stats-vertical lg:stats-horizontal mt-2">
